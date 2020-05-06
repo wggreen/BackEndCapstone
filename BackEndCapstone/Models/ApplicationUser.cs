@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
 
 namespace BackEndCapstone.Models
 {
@@ -15,7 +12,6 @@ namespace BackEndCapstone.Models
         [Required]
         public string Name { get; set; }
 
-        [Required]
         public string Capacity { get; set; }
 
         public string Address { get; set; }
