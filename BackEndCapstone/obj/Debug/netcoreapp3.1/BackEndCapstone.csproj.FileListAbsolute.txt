@@ -455,3 +455,4 @@ C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\bin\Debug\netcoreapp3
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\BackEndCapstone.csproj.CoreCompileInputs.cache
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\BackEndCapstone.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\BackEndCapstone.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Address\Index.cshtml.g.cs

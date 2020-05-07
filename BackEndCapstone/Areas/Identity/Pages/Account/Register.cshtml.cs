@@ -16,6 +16,10 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using BackEndCapstone.Data;
 using System.Security.Cryptography.Xml;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Text.Json;
 
 namespace BackEndCapstone.Areas.Identity.Pages.Account
 {
@@ -153,33 +157,40 @@ namespace BackEndCapstone.Areas.Identity.Pages.Account
                     address = user.Address + " " + address;
                 }
 
-                let geocoder = new window.google.maps.Geocoder();
-                geocoder.geocode( { address: addressString}, function(results, status) {
-                    if (status == 'OK')
-                    {
-                        let addressObject = {
-                                        userId: parseInt(localStorage.getItem("capstone_user"), 10),
-                                        name: venueName.current.value,
-                                        address: results[0].geometry.location,
-                                        id: parseInt(localStorage.getItem("capstone_user"), 10)
-                                    }
-                    let userId = parseInt(localStorage.getItem("capstone_user"), 10)
-                                    addAddress(addressObject)
-                                    .then(() =>
-                                    {
-                                    localStorage.setItem("profile", "set")
-                                        props.history.push(`/ venueProfiles /${ userId}`)
-                                    })
-                                }
-        });
-
                 var AddressToAdd = new Address
                 {
                     FullAddress = address,
                     Name = user.Name
                 };
 
-        _context.Addresses.Add(AddressToAdd);
+                var addressArray = address.Split(" ");
+
+                string joinedString = string.Join("+", addressArray);
+
+                var uri = $"https://maps.googleapis.com/maps/api/geocode/json?address={joinedString}&key=AIzaSyBedz54CszWCt94vm9gZGAYJdQC5v487nI";
+                var client = new HttpClient();
+
+                // Set request header to accept JSON
+                client.DefaultRequestHeaders
+                    .Accept
+                    .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var response = await client.GetAsync(uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStreamAsync();
+                    var geocodeData = await JsonSerializer.DeserializeAsync<Geocode>(json);
+
+                    var lat = geocodeData.results[0].geometry.location.lat.ToString();
+                    var lng = geocodeData.results[0].geometry.location.lng.ToString();
+
+                    AddressToAdd.Lat = lat;
+                    AddressToAdd.Lng = lng;
+
+                    _context.Addresses.Add(AddressToAdd);
+                }
+
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
@@ -187,20 +198,22 @@ namespace BackEndCapstone.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
                         values: new { area = "Identity", userId = user.Id, code = code },
                         protocol: Request.Scheme);
 
-        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email
-    });
+                        return RedirectToPage("RegisterConfirmation", new
+                        {
+                            email = Input.Email
+                        });
                     }
                     else
                     {

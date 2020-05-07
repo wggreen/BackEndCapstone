@@ -13,5 +13,9 @@ namespace BackEndCapstone.Models
         public string FullAddress { get; set; }
 
         public string Name { get; set; }
+
+        public string Lat { get; set; }
+
+        public string Lng { get; set; }
     }
 }
