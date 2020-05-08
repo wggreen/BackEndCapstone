@@ -14,23 +14,32 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using BackEndCapstone.Data;
+using System.Security.Cryptography.Xml;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Microsoft.EntityFrameworkCore.Internal;
+using System.Text.Json;
 
 namespace BackEndCapstone.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
+        private readonly ApplicationDbContext _context;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public RegisterModel(
+            ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
+            _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
@@ -113,8 +122,9 @@ namespace BackEndCapstone.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { 
-                    UserName = Input.Email, 
+                var user = new ApplicationUser
+                {
+                    UserName = Input.Email,
                     Email = Input.Email,
                     UserType = Input.UserType,
                     Name = Input.Name,
@@ -133,6 +143,55 @@ namespace BackEndCapstone.Areas.Identity.Pages.Account
                     Spotify = Input.Spotify,
                     Blurb = Input.Blurb
                 };
+
+
+                var address = user.City + ", " + user.State;
+
+                if (user.Zip != null)
+                {
+                    address = address + " " + user.Zip;
+                }
+
+                if (user.Address != null)
+                {
+                    address = user.Address + " " + address;
+                }
+
+                var AddressToAdd = new Address
+                {
+                    FullAddress = address,
+                    Name = user.Name
+                };
+
+                var addressArray = address.Split(" ");
+
+                string joinedString = string.Join("+", addressArray);
+
+                var uri = $"https://maps.googleapis.com/maps/api/geocode/json?address={joinedString}&key=AIzaSyBedz54CszWCt94vm9gZGAYJdQC5v487nI";
+                var client = new HttpClient();
+
+                // Set request header to accept JSON
+                client.DefaultRequestHeaders
+                    .Accept
+                    .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                var response = await client.GetAsync(uri);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStreamAsync();
+                    var geocodeData = await JsonSerializer.DeserializeAsync<Geocode>(json);
+
+                    var lat = geocodeData.results[0].geometry.location.lat.ToString();
+                    var lng = geocodeData.results[0].geometry.location.lng.ToString();
+
+                    AddressToAdd.Lat = lat;
+                    AddressToAdd.Lng = lng;
+
+                    _context.Addresses.Add(AddressToAdd);
+                }
+
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -147,11 +206,14 @@ namespace BackEndCapstone.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
+                        return RedirectToPage("RegisterConfirmation", new
+                        {
+                            email = Input.Email
+                        });
                     }
                     else
                     {
