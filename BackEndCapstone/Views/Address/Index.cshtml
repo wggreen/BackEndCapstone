@@ -25,25 +25,15 @@
                 center: { lat: 39.5, lng: -98.35 },
                 zoom: 3
             });
-            var infoWindow = new google.maps.InfoWindow();
-
-            google.maps.event.addListener(map, 'click', function () {
-                infoWindow.close();
-            });
-
-            @foreach (var item in Model) {
+            @foreach(var item in Model){
                  <text>
-                var marker = new google.maps.Marker({
-                    map: map,
-                    position: { lat: @item.Lat, lng: @item.Lng },
-                    title: '@item.Name'
-                });
-                google.maps.event.addListener(marker, 'click', function () {
-                    infoWindow.setContent(`<div id="content"> <h1 id="firstHeading" class="firstHeading">${@item.Name}</h1> <div id="bodyContent">${@item.Blurb}</div> </div>`);
-                    infoWindow.open(map, marker);
-                });
+                    var marker = new google.maps.Marker({
+                      map: map,
+                      position: { lat: @item.Lat, lng: @item.Lng },
+                      title: '@item.Name'
+                    });
                 </text>
-            }
+}
         }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBedz54CszWCt94vm9gZGAYJdQC5v487nI&callback=initMap"

@@ -26,9 +26,6 @@ namespace BackEndCapstone.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Blurb")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FullAddress")
                         .HasColumnType("nvarchar(max)");
 

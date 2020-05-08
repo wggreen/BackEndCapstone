@@ -14,8 +14,6 @@ namespace BackEndCapstone.Models
 
         public string Name { get; set; }
 
-        public string Blurb { get; set; }
-
         public string Lat { get; set; }
 
         public string Lng { get; set; }
