@@ -25,23 +25,23 @@
                 center: { lat: 39.5, lng: -98.35 },
                 zoom: 3
             });
-            function createWindow(marker) {
-                var infoWindow = new google.maps.InfoWindow({
-                    content: `<div id="content"> <h1 id="firstHeading" class="firstHeading">Test</h1> <div id="bodyContent">Test </div> </div>`
-                });
+            var infoWindow = new google.maps.InfoWindow();
 
-                marker.addListener('click', function () {
-                    infoWindow.open(map, marker);
-                });
-            }
+            google.maps.event.addListener(map, 'click', function () {
+                infoWindow.close();
+            });
+
             @foreach (var item in Model) {
                  <text>
-            var marker = new google.maps.Marker({
-                map: map,
-                position: { lat: @item.Lat, lng: @item.Lng },
-                title: '@item.Name'
-            });
-            createWindow(marker)
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: { lat: @item.Lat, lng: @item.Lng },
+                    title: '@item.Name'
+                });
+                google.maps.event.addListener(marker, 'click', function () {
+                    infoWindow.setContent(`<div id="content"> <h1 id="firstHeading" class="firstHeading">${@item.Name}</h1> <div id="bodyContent">${@item.Blurb}</div> </div>`);
+                    infoWindow.open(map, marker);
+                });
                 </text>
             }
         }
