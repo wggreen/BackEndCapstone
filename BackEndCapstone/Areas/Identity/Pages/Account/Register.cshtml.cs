@@ -160,7 +160,8 @@ namespace BackEndCapstone.Areas.Identity.Pages.Account
                 var AddressToAdd = new Address
                 {
                     FullAddress = address,
-                    Name = user.Name
+                    Name = user.Name,
+                    Blurb = user.Blurb
                 };
 
                 var addressArray = address.Split(" ");
