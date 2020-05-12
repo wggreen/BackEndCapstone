@@ -145,27 +145,23 @@ namespace BackEndCapstone.Areas.Identity.Pages.Account
                 };
 
 
-                var address = user.City + ", " + user.State;
+                var fullAddress = user.City + ", " + user.State;
 
                 if (user.Zip != null)
                 {
-                    address = address + " " + user.Zip;
+                    fullAddress = fullAddress + " " + user.Zip;
                 }
 
                 if (user.Address != null)
                 {
-                    address = user.Address + " " + address;
+                    fullAddress = user.Address + " " + fullAddress;
                 }
 
-                var AddressToAdd = new Address
-                {
-                    FullAddress = address,
-                    Name = user.Name
-                };
+                user.FullAddress = fullAddress;
 
-                var addressArray = address.Split(" ");
+                var fullAddressArray = fullAddress.Split(" ");
 
-                string joinedString = string.Join("+", addressArray);
+                string joinedString = string.Join("+", fullAddressArray);
 
                 var uri = $"https://maps.googleapis.com/maps/api/geocode/json?address={joinedString}&key=AIzaSyBedz54CszWCt94vm9gZGAYJdQC5v487nI";
                 var client = new HttpClient();
@@ -185,12 +181,9 @@ namespace BackEndCapstone.Areas.Identity.Pages.Account
                     var lat = geocodeData.results[0].geometry.location.lat.ToString();
                     var lng = geocodeData.results[0].geometry.location.lng.ToString();
 
-                    AddressToAdd.Lat = lat;
-                    AddressToAdd.Lng = lng;
-
-                    _context.Addresses.Add(AddressToAdd);
+                    user.Lat = lat;
+                    user.Lng = lng;
                 }
-
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)

@@ -42,12 +42,13 @@ namespace BackEndCapstone.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     UserType = table.Column<string>(nullable: false),
                     Name = table.Column<string>(nullable: false),
-                    Capacity = table.Column<string>(nullable: false),
+                    Capacity = table.Column<string>(nullable: true),
                     Address = table.Column<string>(nullable: true),
                     City = table.Column<string>(nullable: false),
                     State = table.Column<string>(nullable: false),
                     Address2 = table.Column<string>(nullable: true),
                     Zip = table.Column<string>(nullable: true),
+                    FullAddress = table.Column<string>(nullable: true),
                     Website = table.Column<string>(nullable: true),
                     Facebook = table.Column<string>(nullable: true),
                     Instagram = table.Column<string>(nullable: true),
@@ -55,7 +56,9 @@ namespace BackEndCapstone.Migrations
                     Bandcamp = table.Column<string>(nullable: true),
                     Youtube = table.Column<string>(nullable: true),
                     Spotify = table.Column<string>(nullable: true),
-                    Blurb = table.Column<string>(nullable: true)
+                    Blurb = table.Column<string>(nullable: true),
+                    Lat = table.Column<string>(nullable: true),
+                    Lng = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

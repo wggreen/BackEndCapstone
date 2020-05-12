@@ -2,7 +2,7 @@
 
 namespace BackEndCapstone.Migrations
 {
-    public partial class updated : Migration
+    public partial class Test2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

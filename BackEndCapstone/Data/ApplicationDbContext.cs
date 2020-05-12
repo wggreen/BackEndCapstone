@@ -10,6 +10,5 @@ namespace BackEndCapstone.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
-        public DbSet<Address> Addresses { get; set; }
     }
 }
