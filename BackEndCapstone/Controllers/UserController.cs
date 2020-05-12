@@ -11,40 +11,41 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackEndCapstone.Controllers
 {
-    public class AddressController : Controller
+    public class UserController : Controller
     {
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AddressController(ApplicationDbContext context, UserManager<ApplicationUser> usermanager)
+        public UserController(ApplicationDbContext context, UserManager<ApplicationUser> usermanager)
         {
             _userManager = usermanager;
             _context = context;
         }
-
-        // GET: Address
+        // GET: User
         public async Task<ActionResult> Index()
         {
-            var addresses = await _context.Addresses
-                    .ToListAsync();
+            var ViewModel = new MapViewModel();
 
-            return View(addresses);
+            ViewModel.ApplicationUsers = await _context.ApplicationUsers
+                .ToListAsync();
+
+            return View(ViewModel);
         }
 
-        // GET: Address/Details/5
+        // GET: User/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Address/Create
+        // GET: User/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Address/Create
+        // POST: User/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -61,13 +62,13 @@ namespace BackEndCapstone.Controllers
             }
         }
 
-        // GET: Address/Edit/5
+        // GET: User/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: Address/Edit/5
+        // POST: User/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -84,13 +85,13 @@ namespace BackEndCapstone.Controllers
             }
         }
 
-        // GET: Address/Delete/5
+        // GET: User/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Address/Delete/5
+        // POST: User/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

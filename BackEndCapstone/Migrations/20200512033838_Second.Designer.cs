@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackEndCapstone.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200505200337_seed6")]
-    partial class seed6
+    [Migration("20200512033838_Second")]
+    partial class Second
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,7 +62,16 @@ namespace BackEndCapstone.Migrations
                     b.Property<string>("Facebook")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FullAddress")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Instagram")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Lat")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Lng")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -136,47 +145,6 @@ namespace BackEndCapstone.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "00000011-ffff-ffff-ffff-ffffffffffff",
-                            AccessFailedCount = 0,
-                            City = "Nashville",
-                            ConcurrencyStamp = "c8b0c71f-969f-48cb-8732-b648b47846a7",
-                            Email = "venue@admin.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            Name = "cool band",
-                            NormalizedEmail = "VENUE@ADMIN.COM",
-                            NormalizedUserName = "VENUE@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHIM56MIfCCqFrCy4u1Oh4ScsSEEKwbc2/zqQWdxupgFimZVrCHOy+4ZrhkwS8esjw==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794588",
-                            State = "TN",
-                            TwoFactorEnabled = false,
-                            UserName = "venue@admin.com",
-                            UserType = "venue"
-                        },
-                        new
-                        {
-                            Id = "00000000-ffff-ffff-ffff-ffffffffffff",
-                            AccessFailedCount = 0,
-                            City = "Nashville",
-                            ConcurrencyStamp = "c54b8371-a554-41f4-8aa3-54392d8865c3",
-                            Email = "band@admin.com",
-                            EmailConfirmed = true,
-                            LockoutEnabled = false,
-                            Name = "cool band",
-                            NormalizedEmail = "BAND@ADMIN.COM",
-                            NormalizedUserName = "BAND@ADMIN.COM",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
-                            State = "TN",
-                            TwoFactorEnabled = false,
-                            UserName = "band@admin.com",
-                            UserType = "venue"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

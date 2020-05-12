@@ -27,6 +27,9 @@ namespace BackEndCapstone.Models
 
         public string Zip { get; set; }
 
+        [Required]
+        public string FullAddress { get; set; }
+
         public string Website { get; set; }
 
         public string Facebook { get; set; }
@@ -43,5 +46,10 @@ namespace BackEndCapstone.Models
 
         public string Blurb { get; set; }
 
+        [Required]
+        public string Lat { get; set; }
+
+        [Required]
+        public string Lng { get; set; }
     }
 }
