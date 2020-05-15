@@ -48,7 +48,7 @@ namespace BackEndCapstone.Migrations
                     State = table.Column<string>(nullable: false),
                     Address2 = table.Column<string>(nullable: true),
                     Zip = table.Column<string>(nullable: true),
-                    FullAddress = table.Column<string>(nullable: true),
+                    FullAddress = table.Column<string>(nullable: false),
                     Website = table.Column<string>(nullable: true),
                     Facebook = table.Column<string>(nullable: true),
                     Instagram = table.Column<string>(nullable: true),
@@ -57,8 +57,8 @@ namespace BackEndCapstone.Migrations
                     Youtube = table.Column<string>(nullable: true),
                     Spotify = table.Column<string>(nullable: true),
                     Blurb = table.Column<string>(nullable: true),
-                    Lat = table.Column<string>(nullable: true),
-                    Lng = table.Column<string>(nullable: true)
+                    Lat = table.Column<string>(nullable: false),
+                    Lng = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -171,6 +171,34 @@ namespace BackEndCapstone.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    MessagesId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SenderId = table.Column<string>(nullable: true),
+                    RecipientId = table.Column<string>(nullable: true),
+                    MessageText = table.Column<string>(nullable: true),
+                    Timestamp = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.MessagesId);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Messages_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -209,6 +237,16 @@ namespace BackEndCapstone.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_RecipientId",
+                table: "Messages",
+                column: "RecipientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_SenderId",
+                table: "Messages",
+                column: "SenderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -227,6 +265,9 @@ namespace BackEndCapstone.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

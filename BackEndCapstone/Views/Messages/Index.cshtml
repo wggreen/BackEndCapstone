@@ -1,0 +1,45 @@
+﻿@model IEnumerable<BackEndCapstone.Models.ViewModels.Conversation>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">New message</a>
+</p>
+<table class="table">
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tbody class="@(item.IsRead == true ? "IsRead" : "UnRead")">
+                <tr>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.UserTwo.Id"></a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserTwo.Name)
+                    </td>
+                    <td>
+                        @if (@item.LastMessage.SenderId == item.User.Id)
+                        {<p>You: @Html.DisplayFor(modelItem => item.LastMessage.MessageText) </p>}
+                    else
+                    {<p>@Html.DisplayFor(modelItem => item.LastMessage.MessageText)</p>}
+                    </td>
+                    @if (item.LastMessage.Timestamp.Year == 0001)
+                    {
+                        <td>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LastMessage.Timestamp)
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        }
+        </tbody>
+    </table>

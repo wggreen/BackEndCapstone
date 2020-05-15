@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 namespace BackEndCapstone.Models
@@ -51,5 +52,9 @@ namespace BackEndCapstone.Models
 
         [Required]
         public string Lng { get; set; }
+
+        public virtual List<Messages> SentMessages { get; set; }
+
+        public virtual List<Messages> ReceiviedMessages { get; set; }
     }
 }

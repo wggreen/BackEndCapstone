@@ -8,5 +8,7 @@ namespace BackEndCapstone.Models
     public class MapViewModel
     {
         public List<ApplicationUser> ApplicationUsers { get; set; }
+
+        public string ApplicationUserId { get; set; }
     }
 }

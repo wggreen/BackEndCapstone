@@ -456,3 +456,4 @@ C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\BackEndCapstone.pdb
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\BackEndCapstone.genruntimeconfig.cache
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\User\Index.cshtml.g.cs
+C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Messages\Index.cshtml.g.cs

@@ -1,66 +1,62 @@
 ﻿@model BackEndCapstone.Models.MapViewModel
+@using BackEndCapstone.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
 <style>
-    /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
+    .container {
+        height: 100%;
+        width: 100%;
+    }
+
     #map {
-        height: 400px;
-        width: 400px;
+        height: 566px;
+        width: 1000px;
+        position: relative;
+        z-index: 1;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        margin-right: 300px;
+    }
+
+    #panel {
+        position: relative;
+        left: 62px;
+        height: 100%;
+        width: 200px;
+        background-color: white;
+        position: absolute;
+        z-index: 2;
+    }
+
+    .hidden {
+        display: none;
     }
 </style>
 
 
+<form class="form-inline my-2 my-lg-0" id="tourNameForm">
+    <input class="form-control mr-sm-2" id="tourNameInput" type="text" name="tourName" placeholder="Enter a tour name">
+    <input id="userIdInput" type="hidden" value=@Model.ApplicationUserId />
+    <button class="btn btn-secondary my-2 my-sm-0 compSearch" id="tourNameButton">Submit</button>
+</form>
+
+<p id="tourName" class="hidden"></p>
+
+
 <div class="row">
     <div id="map"></div>
-    <div id="cards"></div>
-    <script>
-        var map;
-        function initMap() {
-            var infoWindow = new google.maps.InfoWindow();
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 39.5, lng: -98.35 },
-                zoom: 3
-            });
-
-            google.maps.event.addListener(map, 'click', function () {
-                infoWindow.close();
-            });
-
-            var markers = [];
-
-
-
-            @foreach (var item in @Model.ApplicationUsers) {
-                <text>
-                    var marker = new google.maps.Marker({
-                        map: map,
-                        position: { lat: @item.Lat, lng: @item.Lng },
-                        title: `@item.Name`
-                    });
-
-                    google.maps.event.addListener(marker, 'click', (function (marker) {
-                        return function () {
-                            infoWindow.setContent(`<div id="content"> <h1 id="firstHeading" class="firstHeading">@item.Name</h1> <div id="bodyContent">Test</div> <button onClick=generateTourCard(@item)>Add to tour</button> </div>`);
-                            infoWindow.open(map, marker);
-                        }
-                    })(marker));
-
-                    markers.push(marker)
-                </text>
-
-             }
-
-
-        }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBedz54CszWCt94vm9gZGAYJdQC5v487nI&callback=initMap"
-            async defer></script>
-    <script src="~/js/Map.js"></script>
-
+    <div id="panel">
+        <p></p>
+    </div>
 </div>
+<div id="cards"></div>
+<script src="~/js/Map.js">IDBCursor</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBedz54CszWCt94vm9gZGAYJdQC5v487nI&callback=initMap"></script>
