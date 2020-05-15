@@ -15,6 +15,8 @@ namespace BackEndCapstone.Data
 
         public DbSet<Tour> Tours { get; set; }
 
+        public DbSet<Destination> Destinations { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

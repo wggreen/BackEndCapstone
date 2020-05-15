@@ -11,84 +11,68 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackEndCapstone.Controllers
 {
-    public class UserController : Controller
+    public class DestinationController : Controller
     {
 
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserController(ApplicationDbContext context, UserManager<ApplicationUser> usermanager)
+        public DestinationController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _userManager = usermanager;
             _context = context;
+            _userManager = userManager;
         }
-        // GET: User
-        public async Task<ActionResult> Index()
+        // GET: Destination
+        public async Task<ActionResult> GetDestinations()
         {
-            var user = await GetCurrentUserAsync();
-
-            var ViewModel = new MapViewModel();
-
-            ViewModel.ApplicationUsers = await _context.ApplicationUsers
-                .Where(user => user.UserType == "venue")
+            var destinations = await _context.Destinations
                 .ToListAsync();
-
-            ViewModel.ApplicationUserId = user.Id;
-
-            return View(ViewModel);
+            return Ok(destinations);
         }
 
-        public async Task<ActionResult> GetUsers()
-        {
-            var users = await _context.ApplicationUsers
-                .ToListAsync();
-            return Ok(users);
-        }
-
-        public async Task<ActionResult> GetVenues()
-        {
-            var users = await _context.ApplicationUsers
-                .Where(user => user.UserType == "venue")
-                .ToListAsync();
-            return Ok(users);
-        }
-
-        // GET: User/Details/5
+        // GET: Destination/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: User/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        // GET: Destination/Create
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
 
-        // POST: User/Create
+        // POST: Destination/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(Destination destination)
         {
             try
             {
-                // TODO: Add insert logic here
+                var user = await GetCurrentUserAsync();
+                var newDestination = new Destination()
+                {
+                    Name = destination.Name,
+                    UserId = destination.UserId,
+                };
 
-                return RedirectToAction(nameof(Index));
+                _context.Destinations.Add(newDestination);
+                await _context.SaveChangesAsync();
+
+                return Ok(newDestination);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return Ok(ex);
             }
         }
 
-        // GET: User/Edit/5
+        // GET: Destination/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: User/Edit/5
+        // POST: Destination/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -105,13 +89,13 @@ namespace BackEndCapstone.Controllers
             }
         }
 
-        // GET: User/Delete/5
+        // GET: Destination/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: User/Delete/5
+        // POST: Destination/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

@@ -9,8 +9,12 @@ namespace BackEndCapstone.Models
     public class Destination
     {
         [Key]
-        public int Id { get; set; }
+        public int DestinationId { get; set; }
 
-        public int VenueId { get; set; }
+        public string Name { get; set; }
+
+        public string UserId { get; set; }
+
+        public int TourId { get; set; }
     }
 }

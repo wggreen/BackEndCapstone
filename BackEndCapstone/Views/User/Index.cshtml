@@ -13,9 +13,14 @@
         width: 100%;
     }
 
+    main {
+        display: flex;
+        flex-direction: row;
+    }
+
     #map {
         height: 566px;
-        width: 1000px;
+        width: 800px;
         position: relative;
         z-index: 1;
         top: 0;
@@ -23,17 +28,34 @@
         left: 0;
         right: 0;
         margin: auto;
-        margin-right: 300px;
+        margin-right: 115px;
     }
 
     #panel {
-        position: relative;
         left: 62px;
-        height: 100%;
+        height: 566px;
         width: 200px;
-        background-color: white;
+        background-color: red;
         position: absolute;
         z-index: 2;
+    }
+
+    #tourNameForm {
+        left: 300px;
+        margin: auto;
+        justify-content: center;
+        z-index: 2;
+        position: absolute;
+        top: 84px;
+    }
+
+    #itinerary {
+        right: 100px;
+    }
+
+    #tourName {
+        margin-bottom: 0px;
+        margin-top: -10px;
     }
 
     .hidden {
@@ -41,22 +63,18 @@
     }
 </style>
 
-
-<form class="form-inline my-2 my-lg-0" id="tourNameForm">
-    <input class="form-control mr-sm-2" id="tourNameInput" type="text" name="tourName" placeholder="Enter a tour name">
-    <input id="userIdInput" type="hidden" value=@Model.ApplicationUserId />
-    <button class="btn btn-secondary my-2 my-sm-0 compSearch" id="tourNameButton">Submit</button>
-</form>
-
-<p id="tourName" class="hidden"></p>
-
-
 <div class="row">
     <div id="map"></div>
-    <div id="panel">
-        <p></p>
-    </div>
+    <div id="panel" class="hidden"></div>
+    <form class="form-inline my-2 my-lg-0" id="tourNameForm">
+        <input class="form-control mr-sm-2" id="tourNameInput" type="text" name="tourName" placeholder="Enter a tour name">
+        <input id="userIdInput" type="hidden" value=@Model.ApplicationUserId />
+        <button class="btn btn-secondary my-2 my-sm-0 compSearch" id="tourNameButton">Submit</button>
+    </form>
 </div>
-<div id="cards"></div>
+<div id="itinerary">
+    <h1 id="tourName" class="hidden"></h1>
+    <div id="cards"></div>
+</div>
 <script src="~/js/Map.js">IDBCursor</script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBedz54CszWCt94vm9gZGAYJdQC5v487nI&callback=initMap"></script>

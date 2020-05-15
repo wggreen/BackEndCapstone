@@ -4,14 +4,16 @@ using BackEndCapstone.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BackEndCapstone.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200515163036_Destination")]
+    partial class Destination
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,7 +152,7 @@ namespace BackEndCapstone.Migrations
 
             modelBuilder.Entity("BackEndCapstone.Models.Destination", b =>
                 {
-                    b.Property<int>("DestinationId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -158,13 +160,10 @@ namespace BackEndCapstone.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TourId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("DestinationId");
+                    b.HasKey("Id");
 
                     b.ToTable("Destinations");
                 });
@@ -202,7 +201,7 @@ namespace BackEndCapstone.Migrations
 
             modelBuilder.Entity("BackEndCapstone.Models.Tour", b =>
                 {
-                    b.Property<int>("TourId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -216,7 +215,7 @@ namespace BackEndCapstone.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("TourId");
+                    b.HasKey("Id");
 
                     b.ToTable("Tours");
                 });
