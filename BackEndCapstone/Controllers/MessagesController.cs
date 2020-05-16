@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackEndCapstone.Data;
 using BackEndCapstone.Models;
-using BackEndCapstone.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,64 +21,6 @@ namespace BackEndCapstone.Controllers
         {
             _context = context;
             _userManager = userManager;
-        }
-
-        // GET: Messages
-        public async Task<IActionResult> Index()
-        {
-            var user = await GetCurrentUserAsync();
-
-            var lastMessage = _context.Messages
-                .OrderByDescending(m => m.Timestamp)
-                .FirstOrDefault();
-
-            if (lastMessage != null)
-            {
-                var conversations = new List<Conversation>();
-                var conversation = new Conversation();
-
-                if (lastMessage.RecipientId == user.Id)
-                {
-                    conversation.User = user;
-                    conversation.UserTwo = lastMessage.Recipient;
-                    conversation.LastMessage = lastMessage;
-                    conversation.IsRead = lastMessage.IsRead;
-                }
-                
-                if (lastMessage.SenderId == user.Id)
-                {
-                    conversation.User = user;
-                    conversation.UserTwo = lastMessage.Sender;
-                    conversation.LastMessage = lastMessage;
-                    conversation.IsRead = lastMessage.IsRead;
-                }
-
-                conversations.Add(conversation);
-
-                return View(conversations);
-            }
-            else
-            {
-                lastMessage = new Messages()
-                {
-                    RecipientId = null,
-                    Recipient = null,
-                    Sender = null,
-                    SenderId = null,
-                    MessageText = null
-                };
-
-                var conversations = new List<Conversation>();
-                var conversation = new Conversation();
-                conversation.User = null;
-                conversation.UserTwo = null;
-                conversation.LastMessage = lastMessage;
-                conversation.IsRead = lastMessage.IsRead;
-
-                conversations.Add(conversation);
-
-                return View(conversations);
-            }
         }
 
         // GET: Messages/Details/5

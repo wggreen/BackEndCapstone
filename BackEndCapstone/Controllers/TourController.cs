@@ -30,6 +30,18 @@ namespace BackEndCapstone.Controllers
             return Ok(tours);
         }
 
+        public async Task<ActionResult> GetTourByName(string name)
+        {
+            var user = await GetCurrentUserAsync();
+
+            var foundTour = await _context.Tours
+                .Where(tour => tour.Name == name)
+                .Where(tour => tour.UserId == user.Id)
+                .FirstOrDefaultAsync();
+
+            return Ok(foundTour);
+        }
+
         // GET: Tour/Details/5
         public ActionResult Details(int id)
         {
@@ -67,27 +79,22 @@ namespace BackEndCapstone.Controllers
             }
         }
 
-        // GET: Tour/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
         // POST: Tour/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, Tour tour)
         {
-            try
+            var tourInstance = new Tour()
             {
-                // TODO: Add update logic here
+                TourId = tour.TourId,
+                Name = tour.Name,
+                UserId = tour.UserId,
+                Saved = tour.Saved
+            };
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            _context.Tours.Update(tourInstance);
+            await _context.SaveChangesAsync();
+
+            return Ok(tourInstance);
         }
 
         // GET: Tour/Delete/5

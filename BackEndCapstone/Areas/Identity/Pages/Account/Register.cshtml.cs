@@ -144,7 +144,6 @@ namespace BackEndCapstone.Areas.Identity.Pages.Account
                     Blurb = Input.Blurb
                 };
 
-
                 var fullAddress = user.City + ", " + user.State;
 
                 if (user.Zip != null)
