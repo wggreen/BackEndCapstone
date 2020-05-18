@@ -1,0 +1,31 @@
+﻿@model IEnumerable<BackEndCapstone.Models.Tour>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .tourList {
+        display: flex;
+        flex-direction: row;
+    }
+</style>
+
+<h1>Index</h1>
+
+<div class="tourList">
+    @foreach (var item in Model) {
+        <div class="singleTour">
+            <div>@item.Name</div>
+            <ul>
+                @foreach(var destination in item.Destinations)
+                {
+                    <li>
+                        <h3>@destination.Name</h3>
+                        <div>@destination.City, @destination.State</div>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>

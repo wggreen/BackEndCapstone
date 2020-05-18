@@ -23,6 +23,18 @@ namespace BackEndCapstone.Controllers
             _userManager = userManager;
         }
 
+        public async Task<ActionResult> Index()
+        {
+            var user = await GetCurrentUserAsync();
+
+            var tours = await _context.Tours
+                .Where(tour => tour.UserId == user.Id)
+                .Include(tour => tour.Destinations)
+                .ToListAsync();
+
+            return View(tours);
+        }
+
         // GET: Tour
         public async Task<ActionResult> GetTours()
         {

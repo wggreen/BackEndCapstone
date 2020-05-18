@@ -37,13 +37,6 @@ namespace BackEndCapstone.Controllers
             return View();
         }
 
-        // GET: Destination/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        // POST: Destination/Create
         [HttpPost]
         public async Task<ActionResult> Create(Destination destination)
         {
@@ -55,7 +48,9 @@ namespace BackEndCapstone.Controllers
                     Name = destination.Name,
                     UserId = destination.UserId,
                     TourId = destination.TourId,
-                    DateTimeAdded = DateTime.Now
+                    DateTimeAdded = DateTime.Now,
+                    City = destination.City,
+                    State = destination.State
                 };
 
                 _context.Destinations.Add(newDestination);
@@ -79,7 +74,9 @@ namespace BackEndCapstone.Controllers
                 Name = destination.Name,
                 UserId = destination.UserId,
                 TourId = destination.TourId,
-                DateTimeAdded = DateTime.Now
+                DateTimeAdded = DateTime.Now,
+                City = destination.City,
+                State = destination.State
             };
 
             _context.Destinations.Update(destinationInstance);

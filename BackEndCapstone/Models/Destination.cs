@@ -12,6 +12,11 @@ namespace BackEndCapstone.Models
         public int DestinationId { get; set; }
 
         public string Name { get; set; }
+        
+
+        public string City { get; set; }
+
+        public string State { get; set; }
 
         public string UserId { get; set; }
 

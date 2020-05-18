@@ -110,7 +110,7 @@ async function deleteDestination(destination) {
     return dataObj
 }
 
-async function createDestination(formData, venue) {
+async function createDestination(formData) {
     const dataObj = await fetch("/Destination/Create", {
         method: "Post",
         body: formData
@@ -121,8 +121,8 @@ async function createDestination(formData, venue) {
             tourId: res.tourId,
             DateTimeAdded: res.dateTimeAdded,
             destinationId: res.destinationId,
-            city: venue.city,
-            state: venue.state,
+            city: res.city,
+            state: res.state,
         };
 
         destinations.push(destination);
@@ -142,9 +142,11 @@ function addDestination(venue) {
     formData.append('name', venue.name)
     formData.append('userId', document.getElementById("userIdInput").value)
     formData.append('tourId', tour.tourId)
-    formData.append("DateTimeAdded", new Date())
+    formData.append("dateTimeAdded", new Date())
+    formData.append("city", venue.city)
+    formData.append("state", venue.state)
 
-    var newDestination = createDestination(formData, venue)
+    var newDestination = createDestination(formData)
 }
 
 async function initMap() {
