@@ -22,6 +22,7 @@ namespace BackEndCapstone.Controllers
             _context = context;
             _userManager = userManager;
         }
+
         // GET: Tour
         public async Task<ActionResult> GetTours()
         {
@@ -47,12 +48,6 @@ namespace BackEndCapstone.Controllers
         {
             return View();
         }
-
-        // GET: Tour/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
 
         // POST: Tour/Create
         [HttpPost]
@@ -81,7 +76,7 @@ namespace BackEndCapstone.Controllers
 
         // POST: Tour/Edit/5
         [HttpPost]
-        public async Task<ActionResult> Edit(int id, Tour tour)
+        public async Task<ActionResult> Edit(Tour tour)
         {
             var tourInstance = new Tour()
             {

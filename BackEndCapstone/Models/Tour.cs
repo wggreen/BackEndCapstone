@@ -17,5 +17,7 @@ namespace BackEndCapstone.Models
         public string UserId { get; set; }
 
         public bool Saved { get; set; }
+
+        public List<Destination> Destinations {get;set;}
     }
 }

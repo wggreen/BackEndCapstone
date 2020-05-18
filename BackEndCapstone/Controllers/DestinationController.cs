@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using BackEndCapstone.Data;
 using BackEndCapstone.Models;
@@ -53,6 +54,8 @@ namespace BackEndCapstone.Controllers
                 {
                     Name = destination.Name,
                     UserId = destination.UserId,
+                    TourId = destination.TourId,
+                    DateTimeAdded = DateTime.Now
                 };
 
                 _context.Destinations.Add(newDestination);
@@ -66,50 +69,33 @@ namespace BackEndCapstone.Controllers
             }
         }
 
-        // GET: Destination/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
         // POST: Destination/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(Destination destination)
         {
-            try
+            var destinationInstance = new Destination()
             {
-                // TODO: Add update logic here
+                DestinationId = destination.DestinationId,
+                Name = destination.Name,
+                UserId = destination.UserId,
+                TourId = destination.TourId,
+                DateTimeAdded = DateTime.Now
+            };
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            _context.Destinations.Update(destinationInstance);
+            await _context.SaveChangesAsync();
 
-        // GET: Destination/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
+            return Ok(destinationInstance);
         }
 
         // POST: Destination/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+                var foundDestination = await _context.Destinations.FirstOrDefaultAsync(d => d.DestinationId == id);
+                _context.Remove(foundDestination);
+                await _context.SaveChangesAsync();
+                return Ok(foundDestination);
         }
 
         private async Task<ApplicationUser> GetCurrentUserAsync() => await _userManager.GetUserAsync(HttpContext.User);
