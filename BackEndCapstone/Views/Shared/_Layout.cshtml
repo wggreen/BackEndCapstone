@@ -22,25 +22,20 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
-                        <ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"></a>
-                            </li>
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"></a>
+                        </li>
+                        @if (SignInManager.IsSignedIn(User) && UserManager.GetUserAsync(User).Result.UserType == "band")
+                        {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Map</a>
                             </li>
                             <li class="nav-item">
-                                <p>band</p>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tour" asp-action="Index">Tours</a>
                             </li>
-                        </ul>
-                        @*<ul class="navbar-nav flex-grow-1">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index"></a>
-                            </li>
-                            <li class="nav-item">
-                                <p>venue</p>
-                            </li>
-                        </ul>*@
+                        }
+                    </ul>
                 </div>
             </div>
         </nav>

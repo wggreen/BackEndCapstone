@@ -31,6 +31,7 @@ async function editTour(tourId, formData) {
     }).then(res => res.json());
 
     tour.name = dataObj.name
+    tour.saved = dataobj.saved
 }
 
 async function createTour(formData) {
@@ -50,27 +51,18 @@ async function createTour(formData) {
 function generateCard(destination) {
 
     var newLi = document.createElement("li")
-
     newLi.style = "font-size: 1.5em !important"
-
     newLi.id = `dateTimeAdded--${destination.DateTimeAdded}`
-
     document.getElementById("cards").insertAdjacentElement("beforeend", newLi)
 
     var newSpan = document.createElement("span")
-
     newSpan.style = "font-size: 0.75em !important"
-
     newSpan.id = `span--${destination.DateTimeAdded}`
-
     document.getElementById(`dateTimeAdded--${destination.DateTimeAdded}`).insertAdjacentElement("beforeend", newSpan)
 
     var newHeader = document.createElement("h3")
-
     var newContent = document.createTextNode(`${destination.name}`)
-
     newHeader.appendChild(newContent)
-
     document.getElementById(`span--${destination.DateTimeAdded}`).insertAdjacentElement("beforeend", newHeader)
 
     var newDiv = document.createElement("div")
@@ -127,9 +119,20 @@ async function createDestination(formData) {
 
         destinations.push(destination);
 
-        if (destinations.length == 1) {
+        if (destinations.length > 0) {
             document.getElementById("saveTourButton").classList.remove("hidden")
         }
+
+        document.getElementById("saveTourButton").addEventListener("click", async () => {
+
+            let formData = new FormData();
+            formData.append('name', document.getElementById("tourNameInput2").value)
+            formData.append('userId', document.getElementById("userIdInput").value)
+            formData.append('saved', true)
+            formData.append('tourId', tour.tourId)
+
+            await editTour(tour.tourId, formData)
+        })
 
         generateCard(destination)
     })
@@ -226,14 +229,11 @@ document.getElementById("tourNameButton").addEventListener("click", async event 
     }
 })
 
-window.addEventListener("beforeunload", function (event) {
-    event.preventDefault()
+window.addEventListener("beforeunload", function(event) {
     if (event.target.activeElement.id != "tourNameButton") {
-        var confirmationMessage = 'It looks like you have been editing something. '
-            + 'If you leave before saving, your changes will be lost.';
+        event.preventDefault(); 
 
-        (e || window.event).returnValue = confirmationMessage;
-        return confirmationMessage;
+        event.returnValue = "If you leave the page, you'll lose unsaved changes to your your. Are you want you want to continue?";
     }
 });
 
@@ -259,7 +259,7 @@ document.getElementById("tourNameButton2").addEventListener("click", async event
     formData.append('saved', false)
     formData.append('tourId', tour.tourId)
 
-    await editTour(tour.id, formData)
+    await editTour(tour.tourId, formData)
 })
 
 $('#mdp-demo').multiDatesPicker();

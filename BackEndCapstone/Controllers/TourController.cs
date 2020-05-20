@@ -50,6 +50,7 @@ namespace BackEndCapstone.Controllers
             var foundTour = await _context.Tours
                 .Where(tour => tour.Name == name)
                 .Where(tour => tour.UserId == user.Id)
+                .Where(tour => tour.Saved == true)
                 .FirstOrDefaultAsync();
 
             return Ok(foundTour);

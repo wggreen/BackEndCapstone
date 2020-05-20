@@ -21,7 +21,5 @@ namespace BackEndCapstone.Models
         public string UserId { get; set; }
 
         public int TourId { get; set; }
-
-        public DateTime DateTimeAdded { get; set; }
     }
 }

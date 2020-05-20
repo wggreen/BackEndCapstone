@@ -23,6 +23,18 @@ namespace BackEndCapstone.Controllers
             _context = context;
             _userManager = userManager;
         }
+
+        public async Task<ActionResult> Index()
+        {
+            var user = await GetCurrentUserAsync();
+
+            var destinations = await _context.Destinations
+                .Where(destination => destination.UserId == user.Id)
+                .ToListAsync();
+
+            return View(destinations);
+        }
+
         // GET: Destination
         public async Task<ActionResult> GetDestinations()
         {
@@ -38,25 +50,31 @@ namespace BackEndCapstone.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(Destination destination)
+        public async Task<ActionResult> Create(IEnumerable<Destination> destinations)
         {
             try
             {
                 var user = await GetCurrentUserAsync();
-                var newDestination = new Destination()
+
+                foreach (var destination in destinations)
                 {
-                    Name = destination.Name,
-                    UserId = destination.UserId,
-                    TourId = destination.TourId,
-                    DateTimeAdded = DateTime.Now,
-                    City = destination.City,
-                    State = destination.State
-                };
+                    var newDestination = new Destination()
+                    {
+                        Name = destination.Name,
+                        UserId = destination.UserId,
+                        TourId = destination.TourId,
+                        City = destination.City,
+                        State = destination.State
+                    };
 
-                _context.Destinations.Add(newDestination);
-                await _context.SaveChangesAsync();
+                    _context.Destinations.Add(newDestination);
+                    await _context.SaveChangesAsync();
+                }
 
-                return Ok(newDestination);
+                var updatedDestinations = await _context.Destinations
+                    .ToListAsync();
+
+                return Ok(destinations);
             }
             catch (Exception ex)
             {
@@ -74,7 +92,6 @@ namespace BackEndCapstone.Controllers
                 Name = destination.Name,
                 UserId = destination.UserId,
                 TourId = destination.TourId,
-                DateTimeAdded = DateTime.Now,
                 City = destination.City,
                 State = destination.State
             };

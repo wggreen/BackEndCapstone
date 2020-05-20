@@ -1,31 +1,54 @@
 ﻿@model IEnumerable<BackEndCapstone.Models.Tour>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Tours";
 }
 
 <style>
-    .tourList {
+    .tours {
         display: flex;
         flex-direction: row;
+        margin-top: 30px;
+    }
+
+    .tourList {
+        padding: 0;
+        margin-bottom: 1px;
+        margin-left: 25px;
+    }
+
+    .singleTour {
+        margin-right: 50px;
+        border: 1px solid black;
+    }
+
+    .tourItemName {
+        text-decoration: underline;
+    }
+
+    img {
+        max-width: 200px;
     }
 </style>
 
-<h1>Index</h1>
+<h1>Your Tours</h1>
 
-<div class="tourList">
+<div class="tours">
     @foreach (var item in Model) {
         <div class="singleTour">
-            <div>@item.Name</div>
-            <ul>
+            <img src="..\..\images\van.jpg" />
+            <h2 class="tourItemName">@item.Name</h2>
+            <ol class="tourList">
                 @foreach(var destination in item.Destinations)
                 {
-                    <li>
-                        <h3>@destination.Name</h3>
-                        <div>@destination.City, @destination.State</div>
+                    <li style="font-size: 1.25em !important" class="tourListItem">
+                        <h4>@destination.Name</h4>
+                        <div style="font-size: 0.80em !important">
+                            <div>@destination.City, @destination.State</div>
+                        </div>
                     </li>
                 }
-            </ul>
+            </ol>
         </div>
     }
 </div>
