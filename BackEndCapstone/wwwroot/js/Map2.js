@@ -18,10 +18,12 @@ async function getVenues() {
 }
 
 window.addEventListener("beforeunload", function (event) {
-    if (event.target.activeElement.id != "tourNameButton" && event.target.activeElement.id != "saveTourButton") {
-        event.preventDefault();
-
-        return confirm("Are you sure you want to leave?")
+    if (event.target.activeElement.id != "tourNameButton") {
+        if (event.target.activeElement.id != "saveTourButton") {
+            event.preventDefault(); // for Firefox
+            event.returnValue = 'Are you sure you want to leave?'; // for Chrome
+            return 'Are you sure you want to leave?';
+        }
     }
 });
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackEndCapstone.Data;
 using BackEndCapstone.Models;
+using BackEndCapstone.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -103,6 +104,31 @@ namespace BackEndCapstone.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(tourInstance);
+        }
+
+        public async Task<ActionResult> EditMap(int id)
+        {
+            var user = await GetCurrentUserAsync();
+
+            var viewModel = new MapEditViewModel();
+
+             viewModel.ApplicationUsers = await _context.ApplicationUsers
+                .Where(user => user.UserType == "venue")
+                .ToListAsync();
+
+            viewModel.ApplicationUserId = user.Id;
+
+            var foundTour = await _context.Tours
+                .Where(tour => tour.TourId == id)
+                .FirstOrDefaultAsync();
+
+            viewModel.TourToEdit = foundTour;
+
+            viewModel.Destinations = await _context.Destinations
+                .Where(destination => destination.TourId == foundTour.TourId)
+                .ToListAsync();
+
+            return View(viewModel);
         }
 
         // GET: Tour/Delete/5
