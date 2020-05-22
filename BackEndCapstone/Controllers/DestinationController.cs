@@ -106,10 +106,16 @@ namespace BackEndCapstone.Controllers
         [HttpPost]
         public async Task<ActionResult> Delete(int id)
         {
-                var foundDestination = await _context.Destinations.FirstOrDefaultAsync(d => d.DestinationId == id);
-                _context.Remove(foundDestination);
+            var foundDestinations = await _context.Destinations
+                .Where(destination => destination.TourId == id)
+                .ToListAsync();
+            foreach (var destination in foundDestinations)
+            {
+                _context.Remove(destination);
                 await _context.SaveChangesAsync();
-                return Ok(foundDestination);
+
+            }
+                return Ok(foundDestinations);
         }
 
         private async Task<ApplicationUser> GetCurrentUserAsync() => await _userManager.GetUserAsync(HttpContext.User);

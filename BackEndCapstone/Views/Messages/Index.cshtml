@@ -1,0 +1,81 @@
+﻿@model IEnumerable<BackEndCapstone.Models.Messages>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .messages {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .card {
+        padding-bottom: 10px;
+    }
+
+    .card-body {
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+
+<section class="messages">
+    <section class="recievedMessages">
+        <h2>Inbox</h2>
+        <div class="row">
+            <div class="col-sm-6">
+                @foreach (var item in Model)
+                {
+                    if (item.RecipientId == UserManager.GetUserAsync(User).Result.Id)
+                    {
+                        <div class="card border-primary mb-3" style="max-width: 20rem; min-width: 20rem; min-height: 10rem; max-height: 30rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Sender.Name</h5>
+                                <h5 class="card-subtitle">@item.Timestamp</h5>
+                                <p class="card-text">Dates: @item.Dates</p>
+                                <p class="card-text">@item.MessageText</p>
+                                <button id="messageReply">Reply</button>
+                            </div>
+                        </div>
+                        <input id="" type="hidden" value="@UserManager.GetUserAsync(User).Result.Id"/>
+                        <input type="hidden"/>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="sentMessages">
+        <h2>Sent</h2>
+        <div class="row">
+            <div class="col-sm-6">
+                @foreach (var item in Model)
+                {
+                    if (item.SenderId == UserManager.GetUserAsync(User).Result.Id)
+                    {
+                        <div class="card border-primary mb-3" style="max-width: 20rem; min-width: 20rem; min-height: 10rem; max-height: 10rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Recipient.Name</h5>
+                                <h5 class="card-subtitle">@item.Timestamp</h5>
+                                <p class="card-text">Dates: @item.Dates</p>
+                                <p class="card-text">@item.MessageText</p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+</section>
+
+<script src="~/js/Messages.js"></script>

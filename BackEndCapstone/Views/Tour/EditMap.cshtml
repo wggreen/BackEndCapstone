@@ -1,35 +1,143 @@
-﻿@model IEnumerable<BackEndCapstone.Models.ViewModels.MapEditViewModel>
+﻿@model BackEndCapstone.Models.MapEditViewModel
 
 @{
-    ViewData["Title"] = "EditMap";
+    ViewData["Title"] = "Edit Tour";
 }
 
-<h1>EditMap</h1>
+<style>
+    .container {
+        height: 100%;
+        width: 100%;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ApplicationUserId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUserId)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    main {
+        display: flex;
+        flex-direction: row;
+    }
+
+    #map {
+        height: 566px;
+        width: 800px;
+        position: relative;
+        z-index: 1;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        margin-right: 115px;
+    }
+
+    #panel {
+        left: 62px;
+        height: 566px;
+        width: 200px;
+        background-color: red;
+        position: absolute;
+        z-index: 2;
+    }
+
+    #tourNameForm {
+        left: 300px;
+        margin: auto;
+        justify-content: center;
+        z-index: 2;
+        position: absolute;
+        top: 84px;
+    }
+
+    #tourNameForm2 {
+        margin-bottom: 10px !important;
+    }
+
+    #itinerary {
+        right: 100px;
+    }
+
+    #tourName {
+        margin-bottom: 0px;
+        margin-top: -10px;
+        text-decoration: underline;
+    }
+
+    #cards {
+        padding: 0;
+        margin-top: 10px;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<head>
+    <script src="..\..\js\jquery-3.5.1.min.js"></script>
+    <script src="..\..\js\jquery-ui-1.12.1\jquery-ui.js"></script>
+    <script src="..\..\Multiple-Dates-Picker-for-jQuery-UI-latest\jquery-ui.multidatespicker.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="..\..\js\jquery-ui-1.12.1\jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="..\..\Multiple-Dates-Picker-for-jQuery-UI-latest\jquery-ui.multidatespicker.css">
+
+</head>
+
+
+<div class="row">
+    <div id="map"></div>
+    <div id="panel" class="hidden"></div>
+    <input id="userIdInput" type="hidden" value=@Model.ApplicationUserId />
+    <input id="tourIdInput" type="hidden" value=@Model.TourToEdit.TourId />
+</div>
+
+<div id="itinerary">
+    <a asp-controller="Tour" asp-action="Index">Cancel edit</a>
+    <h1 id="tourName">@Model.TourToEdit.Name</h1>
+    <form class="form-inline my-2 my-lg-0 hidden" id="tourNameForm2">
+        <input class="form-control mr-sm-2" id="tourNameInput2" type="text" name="tourName" placeholder="Enter a tour name">
+        <button class="btn btn-secondary my-2 my-sm-0 compSearch" id="tourNameButton2">Save new name</button>
+    </form>
+    <button id="editTourButton">Edit tour name</button>
+    <button id="saveTourButton">Save edit</button>
+    <ol id="cards">
+        @foreach (var destination in Model.Destinations)
+        {
+            var stopNumber = 1;
+
+            var destinationName = destination.Name;
+            if (destinationName.Contains(" "))
+            {
+                var destinationNameArray = destinationName.Split(" ");
+                destinationName = string.Join("-", destinationNameArray);
+            }
+
+            var destinationCity = destination.City;
+            if (destinationCity.Contains(" "))
+            {
+                var destinationCityArray = destinationCity.Split(" ");
+                destinationCity = string.Join("-", destinationCityArray);
+            }
+
+            var destinationState = destination.State;
+            if (destinationState.Contains(" "))
+            {
+                var destinationStateArray = destinationState.Split(" ");
+                destinationState = string.Join("-", destinationStateArray);
+            }
+
+            <li class="@destinationName @destinationCity @destinationState @stopNumber" style="font-size: 1.5em !important">
+                <span ="span--@destinationName span--@stopNumber" style="font-size: 0.75em !important">
+                    <h3>@destinationName</h3>
+                    <div>@destinationCity, @destinationState</div>
+                </span>
+                <button class="deleteCard @destinationCity @stopNumber">Delete</button>
+            </li>
+
+
+
+            stopNumber++;
+        }
+    </ol>
+    <div class="hidden" id="mdp-demo">Test</div>
+</div>
+
+<script src="~/js/EditMap.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBedz54CszWCt94vm9gZGAYJdQC5v487nI&callback=initMap"></script>

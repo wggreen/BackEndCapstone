@@ -1,8 +1,11 @@
 ﻿var map;
+
 var tour = {};
+tour.saved = false
+
 var destinations = []
 
-var stopNumber = 1;
+var stopNumber = 1
 
 async function getVenues() {
     try {
@@ -14,24 +17,93 @@ async function getVenues() {
     }
 }
 
-async function getTours() {
-    const tours = await fetch(`/Tour/GetTours/`).then(res => res.json())
-    return tours
+window.addEventListener("beforeunload", function (event) {
+    var nonTriggers = ["tourNameButton", "saveTourButton", "submitBooking"]
+    if (!nonTriggers.includes(event.target.activeElement.id)) {
+        event.preventDefault(); // for Firefox
+        event.returnValue = 'Are you sure you want to leave?'; // for Chrome
+        return 'Are you sure you want to leave?';
+    }
+});
+
+function generateCard(venue) {
+    var newLi = document.createElement("li")
+    newLi.style = "font-size: 1.5em !important"
+
+    var venueName = venue.name
+    if (venueName.includes(" ")) {
+        venueName = venueName.split(" ")
+        venueName = venueName.join("-")
+    }
+
+    var venueCity = venue.city
+    if (venueCity.includes(" ")) {
+        venueCity = venueCity.split(" ")
+        venueCity = venueCity.join("-")
+    }
+
+    var venueState = venue.state
+    if (venueState.includes(" ")) {
+        venueState = venueState.split(" ")
+        venueState = venueState.join("-")
+    }
+
+    newLi.classList.add(`${venueName}`)
+    newLi.classList.add(`${stopNumber}`)
+    newLi.classList.add(`${venueCity}`)
+    newLi.classList.add(`${venueState}`)
+    document.getElementById("cards").insertAdjacentElement("beforeEnd", newLi)
+
+    var contentTarget = document.getElementsByClassName(`${venueName} ${stopNumber} ${venueCity} ${venueState}`)[0]
+
+    var newSpan = document.createElement("span")
+    newSpan.style = "font-size: 0.75em !important"
+    newSpan.classList.add(`span--${venueName}`)
+    newSpan.classList.add(`span--${stopNumber}`)
+    contentTarget.insertAdjacentElement("beforeEnd", newSpan)
+
+    var spanTarget = document.getElementsByClassName(`span--${venueName} span--${stopNumber}`)[0]
+
+    var newHeader = document.createElement("h3")
+    var newContent = document.createTextNode(`${venue.name}`)
+    newHeader.appendChild(newContent)
+    spanTarget.insertAdjacentElement("beforeEnd", newHeader)
+
+    var newDiv = document.createElement("div")
+    newContent = document.createTextNode(`${venue.city}, ${venue.state}`)
+    newDiv.appendChild(newContent)
+    spanTarget.insertAdjacentElement("beforeEnd", newDiv)
+
+    var newButton = document.createElement("button")
+    newButton.classList.add("deleteCard")
+    newButton.classList.add(`${venueCity}`)
+    newButton.classList.add(`${stopNumber}`)
+    newContent = document.createTextNode("Delete")
+    newButton.appendChild(newContent)
+    newButton.addEventListener("click", event => {
+        newButton.parentElement.outerHTML = ""
+    })
+    contentTarget.insertAdjacentElement("beforeEnd", newButton)
+
+    newButton2 = document.createElement("button")
+    contentTarget.insertAdjacentElement("beforeEnd", newButton2)
+
+    contentTarget.lastElementChild.outerHTML = `<button class="bookButton" data-target="#bookModal" data-toggle="modal">Book here</button>`
+
+    document.getElementById("recipientId").value = venue.id
+
+    document.getElementById("bookName").innerHTML = `${venueName}`
+
+    document.getElementById("bookLocation").innerHTML = `${venueCity.split("-").join(" ")}, ${venueState}`
+
+    stopNumber++
 }
 
-async function getTourByName(name) {
-    const foundTour = await fetch(`Tour/GetTourByName?name=${name}`).then(res => res.json())
-    return foundTour
-}
-
-async function editTour(tourId, formData) {
-    const dataObj = await fetch(`/Tour/Edit?id=${tourId}`, {
+async function createMessage(formData) {
+    const dataObj = await fetch("/Messages/Create", {
         method: "Post",
         body: formData
-    }).then(res => res.json());
-
-    tour.name = dataObj.name
-    tour.saved = dataobj.saved
+    }).then(res => res.json()); 
 }
 
 async function createTour(formData) {
@@ -48,114 +120,22 @@ async function createTour(formData) {
     };
 }
 
-function generateCard(destination) {
-
-    var newLi = document.createElement("li")
-    newLi.style = "font-size: 1.5em !important"
-    newLi.id = `dateTimeAdded--${destination.DateTimeAdded}`
-    document.getElementById("cards").insertAdjacentElement("beforeend", newLi)
-
-    var newSpan = document.createElement("span")
-    newSpan.style = "font-size: 0.75em !important"
-    newSpan.id = `span--${destination.DateTimeAdded}`
-    document.getElementById(`dateTimeAdded--${destination.DateTimeAdded}`).insertAdjacentElement("beforeend", newSpan)
-
-    var newHeader = document.createElement("h3")
-    var newContent = document.createTextNode(`${destination.name}`)
-    newHeader.appendChild(newContent)
-    document.getElementById(`span--${destination.DateTimeAdded}`).insertAdjacentElement("beforeend", newHeader)
-
-    var newDiv = document.createElement("div")
-
-    newContent = document.createTextNode(`${destination.city}, ${destination.state}`)
-
-    newDiv.appendChild(newContent)
-
-    document.getElementById(`span--${destination.DateTimeAdded}`).insertAdjacentElement("beforeend", newDiv)
-
-    var newButton = document.createElement("button")
-
-    newButton.id = `deleteCard--${destination.DateTimeAdded}`
-
-    newContent = document.createTextNode("Delete")
-
-    newButton.appendChild(newContent)
-
-    document.getElementById(`dateTimeAdded--${destination.DateTimeAdded}`).insertAdjacentElement("beforeend", newButton)
-
-    document.getElementById(`deleteCard--${destination.DateTimeAdded}`).addEventListener("click", async () => {
-        await deleteDestination(destination)
-    })
-
-}
-
-async function deleteDestination(destination) {
-    await fetch(`/Destination/Delete/${destination.destinationId}`, {
-        method: "Post",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    }).then(() => {
-        document.getElementById(`dateTimeAdded--${destination.DateTimeAdded}`).outerHTML = ""
-    })
-
-    return dataObj
+async function getTourByName(name) {
+    const foundTour = await fetch(`Tour/GetTourByName?name=${name}`).then(res => res.json())
+    return foundTour
 }
 
 async function createDestination(formData) {
     const dataObj = await fetch("/Destination/Create", {
         method: "Post",
         body: formData
-    }).then(res => res.json()).then(res => {
-        var destination = {
-            name: res.name,
-            userId: res.userId,
-            tourId: res.tourId,
-            DateTimeAdded: res.dateTimeAdded,
-            destinationId: res.destinationId,
-            city: res.city,
-            state: res.state,
-        };
-
-        destinations.push(destination);
-
-        if (destinations.length > 0) {
-            document.getElementById("saveTourButton").classList.remove("hidden")
-        }
-
-        document.getElementById("saveTourButton").addEventListener("click", async () => {
-
-            let formData = new FormData();
-            formData.append('name', document.getElementById("tourNameInput2").value)
-            formData.append('userId', document.getElementById("userIdInput").value)
-            formData.append('saved', true)
-            formData.append('tourId', tour.tourId)
-
-            await editTour(tour.tourId, formData)
-        })
-
-        generateCard(destination)
-    })
-}
-
-function addDestination(venue) {
-
-    let formData = new FormData();
-
-    formData.append('name', venue.name)
-    formData.append('userId', document.getElementById("userIdInput").value)
-    formData.append('tourId', tour.tourId)
-    formData.append("dateTimeAdded", new Date())
-    formData.append("city", venue.city)
-    formData.append("state", venue.state)
-
-    var newDestination = createDestination(formData)
+    }).then(res => res.json())
 }
 
 async function initMap() {
-    
+
     var venues = await getVenues();
-        
+
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 39.5, lng: -98.35 },
         zoom: 3
@@ -166,45 +146,78 @@ async function initMap() {
         contentTarget.classList.add("hidden")
         contentTarget.innerHTML = ""
     });
-        
+
     var latlng = []
 
     venues.forEach(venue => {
-        if (venue.userType == "venue") {
-                
-            var venueLat = parseInt(venue.lat);
-            var venueLng = parseInt(venue.lng);
-            var venueLatLng = [venueLat, venueLng];
-            if (!latlng.includes(venueLatLng)) {
-                var marker = new google.maps.Marker({
-                    map: map,
-                    position: { lat: venueLat, lng: venueLng },
-                    title: venue.name
-                });
+        var venueLat = parseInt(venue.lat);
+        var venueLng = parseInt(venue.lng);
+        var venueLatLng = [venueLat, venueLng];
+        if (!latlng.includes(venueLatLng)) {
+            var marker = new google.maps.Marker({
+                map: map,
+                position: { lat: venueLat, lng: venueLng },
+                title: venue.name
+            });
 
-                latlng.push([venueLat, venueLng]);
+            latlng.push([venueLat, venueLng]);
 
-                google.maps.event.addListener(marker, 'click', (function (marker) {
-                    return function () {
-                        const contentTarget = document.querySelector("#panel")
-                        contentTarget.innerHTML = `<div id="mapPane"><h1>${venue.name}</h1> <h3>${venue.city}, ${venue.state}</h3> <h6>Capacity: ${venue.capacity ? venue.capacity : 100}</h6> <div>${venue.blurb ? venue.blurb : 'we are cool'}</div> <button class="addToTourButton">Add to tour</button></div>`
-                        document.getElementById("mapPane").addEventListener("click", event => {
-                            if (event.target.nodeName == "BUTTON") {
-                                if (tour.name) {
-                                    addDestination(venue)
-                                }
-                                else {
-                                    alert("You must first enter a tour")
-                                }
-                            }
-                        })
-                        contentTarget.classList.remove("hidden")
+            google.maps.event.addListener(marker, 'click', (function (marker) {
+                return function () {
+                    var contentTarget = document.querySelector("#panel")
+
+                    if (contentTarget.hasChildNodes()) {
+                        contentTarget.innerHTML = ""
                     }
-                })(marker));
-            }
+
+                    var newDiv = document.createElement("div")
+                    newDiv.id = "mapPane"
+                    contentTarget.insertAdjacentElement("beforeEnd", newDiv)
+
+                    newDivTarget = document.getElementById("mapPane")
+
+                    var newHeader = document.createElement("h1")
+                    var newContent = document.createTextNode(`${venue.name}`)
+                    newHeader.appendChild(newContent)
+                    newDivTarget.insertAdjacentElement("beforeEnd", newHeader)
+
+                    var newHeader2 = document.createElement("h3")
+                    newContent = document.createTextNode(`${venue.city}, ${venue.state}`)
+                    newHeader2.appendChild(newContent)
+                    newDivTarget.insertAdjacentElement("beforeEnd", newHeader2)
+
+                    var newHeader3 = document.createElement("h6")
+                    newContent = document.createTextNode(`${venue.capacity}`)
+                    newHeader3.appendChild(newContent)
+                    newDivTarget.insertAdjacentElement("beforeEnd", newHeader3)
+
+                    var newDiv2 = document.createElement("div")
+                    newContent = document.createTextNode(`${venue.blurb}`)
+                    newDiv2.appendChild(newContent)
+                    newDivTarget.insertAdjacentElement("beforeEnd", newDiv2)
+
+                    var newButton = document.createElement("button")
+                    newButton.classList.add("addToTourButton") 
+                    newContent = document.createTextNode("Add to tour")
+                    newButton.appendChild(newContent)
+                    newButton.addEventListener("click", event => {
+                        if (tour.name) {
+                            generateCard(venue)
+                        }
+                        else {
+                            alert("You must first enter a tour")
+                        }
+                    })
+                    newDivTarget.insertAdjacentElement("beforeEnd", newButton)
+
+                    contentTarget.classList.remove("hidden")
+
+                }
+            })(marker));
         }
-    })        
+    })
 }
+
 
 document.getElementById("tourNameButton").addEventListener("click", async event => {
     event.preventDefault();
@@ -214,36 +227,36 @@ document.getElementById("tourNameButton").addEventListener("click", async event 
         alert("You already have a tour by that name. Please pick a different one.")
     }
     catch {
-        let formData = new FormData();
-        formData.append('name', document.getElementById("tourNameInput").value)
-        formData.append('userId', document.getElementById("userIdInput").value)
-        formData.append('saved', false)
-
-        await createTour(formData)
+        tour.name = document.getElementById("tourNameInput").value
 
         document.getElementById("tourName").classList.remove("hidden")
         document.getElementById("tourNameForm").classList.add("hidden")
         document.getElementById("tourName").innerHTML = document.getElementById("tourNameInput").value
 
-        document.getElementById("editTourButton").classList.remove("hidden")
+        var newButton = document.createElement("button")
+        newButton.id = "editTourButton"
+        var newContent = document.createTextNode("Edit tour name")
+        newButton.appendChild(newContent)
+        newButton.addEventListener("click", event => {
+            event.preventDefault()
+            document.getElementById("tourName").classList.add("hidden")
+            document.getElementById("tourNameForm2").classList.remove("hidden")
+            document.getElementById("tourNameInput2").value = tour.name
+            newButton.classList.add("hidden")
+            document.getElementById("saveTourButton").classList.add("hidden")
+            var deleteCards = document.getElementsByClassName("deleteCard")
+            var deleteCardsArray = Array.from(deleteCards)
+            deleteCardsArray.forEach(dc => {
+                dc.classList.add("hidden")
+            })
+        })
+        document.getElementById("tourNameForm2").insertAdjacentElement("afterEnd", newButton)
+
     }
 })
 
-window.addEventListener("beforeunload", function(event) {
-    if (event.target.activeElement.id != "tourNameButton") {
-        event.preventDefault(); 
 
-        event.returnValue = "If you leave the page, you'll lose unsaved changes to your your. Are you want you want to continue?";
-    }
-});
-
-document.getElementById("editTourButton").addEventListener("click", event => {
-    document.getElementById("tourName").classList.add("hidden")
-    document.getElementById("tourNameForm2").classList.remove("hidden")
-    document.getElementById("editTourButton").classList.add("hidden")
-})
-
-document.getElementById("tourNameButton2").addEventListener("click", async event => {
+document.getElementById("tourNameButton2").addEventListener("click", event => {
 
     event.preventDefault();
 
@@ -252,14 +265,77 @@ document.getElementById("tourNameButton2").addEventListener("click", async event
     document.getElementById("tourName").innerHTML = document.getElementById("tourNameInput2").value
     document.getElementById("tourName").classList.remove("hidden")
     document.getElementById("editTourButton").classList.remove("hidden")
-
-    let formData = new FormData();
-    formData.append('name', document.getElementById("tourNameInput2").value)
-    formData.append('userId', document.getElementById("userIdInput").value)
-    formData.append('saved', false)
-    formData.append('tourId', tour.tourId)
-
-    await editTour(tour.tourId, formData)
+    document.getElementById("saveTourButton").classList.remove("hidden")
+    var deleteCards = document.getElementsByClassName("deleteCard")
+    var deleteCardsArray = Array.from(deleteCards)
+    deleteCardsArray.forEach(dc => {
+        dc.classList.remove("hidden")
+    })
 })
 
-$('#mdp-demo').multiDatesPicker();
+document.getElementById("saveTourButton").addEventListener("click", async event => {
+    var stopList = document.getElementById("cards")
+    if (stopList.hasChildNodes()) {
+
+        let formData = new FormData();
+        formData.append('name', tour.name)
+        formData.append('userId', document.getElementById("userIdInput").value)
+        formData.append('saved', true)
+
+        await createTour(formData)
+
+        var stops = stopList.childNodes
+        var stopsArray = Array.from(stops)
+        stopsArray.forEach(stop => {
+            var destination = {
+                name: stop.classList[0],
+                userId: document.getElementById("userIdInput").value,
+                tourId: tour.tourId,
+                city: stop.classList[2],
+                state: stop.classList[3]
+            }
+            destinations.push(destination)
+        })
+
+        var index = 0
+        formData = new FormData();
+        destinations.forEach(destination => {
+            formData.append("[" + index + "].name", destination.name)
+            formData.append("[" + index + "].userId", destination.userId)
+            formData.append("[" + index + "].tourId", tour.tourId)
+            formData.append("[" + index + "].city", destination.city)
+            formData.append("[" + index + "].state", destination.state)
+
+            index++
+        })
+        await createDestination(formData)
+
+        window.location.href = '/Tour'
+
+    }
+    else {
+        alert("You can't save an empty tour. Please add some stops")
+    }
+})
+
+$('#bookDate').multiDatesPicker({
+    minDate: 7,
+});
+
+document.getElementById("submitBooking").addEventListener("click", async event => {
+    event.preventDefault()
+    let formData = new FormData();
+    formData.append('senderId', document.getElementById("userIdInput").value)
+    formData.append('recipientId', document.getElementById("recipientId").value)
+    formData.append('dates', document.getElementById("bookDate").value)
+    formData.append('messageText', document.getElementById("bookMessage").value)
+    formData.append('timestamp', new Date())
+    formData.append('isRead', false)
+
+    await createMessage(formData)
+
+    document.getElementById("bookDate").value = ""
+    document.getElementById("bookMessage").value = ""
+
+    $('.modal').modal('toggle')
+})

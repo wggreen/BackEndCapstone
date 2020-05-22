@@ -20,11 +20,12 @@ namespace BackEndCapstone.Models
 
         public ApplicationUser Recipient { get; set; }
 
+        public string Dates { get; set; }
+
         public string MessageText { get; set; }
 
         public DateTime Timestamp { get; set; }
 
         public bool IsRead { get; set; }
-
     }
 }

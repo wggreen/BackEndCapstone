@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BackEndCapstone.Data;
+using BackEndCapstone.Migrations;
 using BackEndCapstone.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -23,32 +24,49 @@ namespace BackEndCapstone.Controllers
             _userManager = userManager;
         }
 
+        public async Task<ActionResult> Index()
+        {
+            var user = await GetCurrentUserAsync();
+
+            var messages = await _context.Messages
+                .Where(message => message.RecipientId == user.Id || message.SenderId == user.Id)
+                .Include(message => message.Recipient)
+                .Include(message => message.Sender)
+                .ToListAsync();
+
+            return View(messages);
+        }
+
         // GET: Messages/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: Messages/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
         // POST: Messages/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(Messages messages)
         {
             try
             {
-                // TODO: Add insert logic here
+                var newMessages = new Messages()
+                {
+                    SenderId = messages.SenderId,
+                    RecipientId = messages.RecipientId,
+                    Dates = messages.Dates,
+                    MessageText = messages.MessageText,
+                    Timestamp = DateTime.Now,
+                    IsRead = false
+                };
 
-                return RedirectToAction(nameof(Index));
+                _context.Messages.Add(newMessages);
+                await _context.SaveChangesAsync();
+
+                return Ok(newMessages);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return Ok(ex);
             }
         }
 

@@ -5,8 +5,6 @@ tour.saved = false
 
 var destinations = []
 
-var stopNumber = 1
-
 async function getVenues() {
     try {
         const venues = await fetch(`/User/GetVenues`).then(res => res.json())
@@ -27,7 +25,15 @@ window.addEventListener("beforeunload", function (event) {
     }
 });
 
+
 function generateCard(venue) {
+    try {
+        var stopNumber = parseInt(document.getElementById("cards").lastElementChild.classList[3])
+    }
+    catch {
+        var stopNumber = 0
+    }
+
     var newLi = document.createElement("li")
     newLi.style = "font-size: 1.5em !important"
 
@@ -50,9 +56,9 @@ function generateCard(venue) {
     }
 
     newLi.classList.add(`${venueName}`)
-    newLi.classList.add(`${stopNumber}`)
     newLi.classList.add(`${venueCity}`)
     newLi.classList.add(`${venueState}`)
+    newLi.classList.add(`${stopNumber}`)
     document.getElementById("cards").insertAdjacentElement("beforeEnd", newLi)
 
     var contentTarget = document.getElementsByClassName(`${venueName} ${stopNumber} ${venueCity} ${venueState}`)[0]
@@ -87,27 +93,18 @@ function generateCard(venue) {
     contentTarget.insertAdjacentElement("beforeEnd", newButton)
 
     document.getElementById("saveTourButton").classList.remove("hidden")
-
-    stopNumber++
-}
-
-async function createTour(formData) {
-    const dataObj = await fetch("/Tour/Create", {
-        method: "Post",
-        body: formData
-    }).then(res => res.json());
-
-    tour = {
-        name: dataObj.name,
-        userId: dataObj.userId,
-        saved: dataObj.saved,
-        tourId: dataObj.tourId
-    };
 }
 
 async function getTourByName(name) {
     const foundTour = await fetch(`Tour/GetTourByName?name=${name}`).then(res => res.json())
     return foundTour
+}
+
+async function editTour(formData) {
+    const dataObj = await fetch("/Tour/Edit", {
+        method: "Post",
+        body: formData
+    }).then(res => res.json())
 }
 
 async function createDestination(formData) {
@@ -117,7 +114,36 @@ async function createDestination(formData) {
     }).then(res => res.json())
 }
 
+async function deleteDestination(id) {
+    const dataObj = await fetch(`/Destination/Delete?id=${id}`, {
+        method: "Post",
+    }).then(res => res.json())
+}
+
 async function initMap() {
+
+    tour.name = document.getElementById("tourName").textContent
+
+    var deleteCards = document.querySelectorAll(".deleteCard")
+    deleteCards.forEach(dc => {
+        dc.addEventListener("click", event => {
+            event.target.parentElement.outerHTML = ""
+        })
+    })
+
+    document.getElementById("editTourButton").addEventListener("click", event => {
+        event.preventDefault()
+        document.getElementById("tourName").classList.add("hidden")
+        document.getElementById("tourNameForm2").classList.remove("hidden")
+        document.getElementById("tourNameInput2").value = tour.name
+        event.target.classList.add("hidden")
+        document.getElementById("saveTourButton").classList.add("hidden")
+        var deleteCards = document.getElementsByClassName("deleteCard")
+        var deleteCardsArray = Array.from(deleteCards)
+        deleteCardsArray.forEach(dc => {
+            dc.classList.add("hidden")
+        })
+    })
 
     var venues = await getVenues();
 
@@ -182,16 +208,11 @@ async function initMap() {
                     newDivTarget.insertAdjacentElement("beforeEnd", newDiv2)
 
                     var newButton = document.createElement("button")
-                    newButton.classList.add("addToTourButton") 
+                    newButton.classList.add("addToTourButton")
                     newContent = document.createTextNode("Add to tour")
                     newButton.appendChild(newContent)
                     newButton.addEventListener("click", event => {
-                        if (tour.name) {
-                            generateCard(venue)
-                        }
-                        else {
-                            alert("You must first enter a tour")
-                        }
+                        generateCard(venue)
                     })
                     newDivTarget.insertAdjacentElement("beforeEnd", newButton)
 
@@ -203,59 +224,27 @@ async function initMap() {
     })
 }
 
-
-document.getElementById("tourNameButton").addEventListener("click", async event => {
+document.getElementById("tourNameButton2").addEventListener("click", async event => {
     event.preventDefault();
 
     try {
-        var foundTour = await getTourByName(document.getElementById("tourNameInput").value)
-        alert("You already have a tour by that name. Please pick a different one.")
+        var foundTour = await getTourByName(document.getElementById("tourNameInput2").value)
+        alert("You already have a different tour by that name. Please pick a different one.")
     }
+
     catch {
-        tour.name = document.getElementById("tourNameInput").value
-
+        tour.name = document.getElementById("tourNameInput2").value
+        document.getElementById("tourNameForm2").classList.add("hidden")
+        document.getElementById("tourName").innerHTML = document.getElementById("tourNameInput2").value
         document.getElementById("tourName").classList.remove("hidden")
-        document.getElementById("tourNameForm").classList.add("hidden")
-        document.getElementById("tourName").innerHTML = document.getElementById("tourNameInput").value
-
-        var newButton = document.createElement("button")
-        newButton.id = "editTourButton"
-        var newContent = document.createTextNode("Edit tour name")
-        newButton.appendChild(newContent)
-        newButton.addEventListener("click", event => {
-            event.preventDefault()
-            document.getElementById("tourName").classList.add("hidden")
-            document.getElementById("tourNameForm2").classList.remove("hidden")
-            document.getElementById("tourNameInput2").value = tour.name
-            newButton.classList.add("hidden")
-            document.getElementById("saveTourButton").classList.add("hidden")
-            var deleteCards = document.getElementsByClassName("deleteCard")
-            var deleteCardsArray = Array.from(deleteCards)
-            deleteCardsArray.forEach(dc => {
-                dc.classList.add("hidden")
-            })
+        document.getElementById("editTourButton").classList.remove("hidden")
+        document.getElementById("saveTourButton").classList.remove("hidden")
+        var deleteCards = document.getElementsByClassName("deleteCard")
+        var deleteCardsArray = Array.from(deleteCards)
+        deleteCardsArray.forEach(dc => {
+            dc.classList.remove("hidden")
         })
-        document.getElementById("tourNameForm2").insertAdjacentElement("afterEnd", newButton)
-
     }
-})
-
-
-document.getElementById("tourNameButton2").addEventListener("click", event => {
-
-    event.preventDefault();
-
-    tour.name = document.getElementById("tourNameInput2").value
-    document.getElementById("tourNameForm2").classList.add("hidden")
-    document.getElementById("tourName").innerHTML = document.getElementById("tourNameInput2").value
-    document.getElementById("tourName").classList.remove("hidden")
-    document.getElementById("editTourButton").classList.remove("hidden")
-    document.getElementById("saveTourButton").classList.remove("hidden")
-    var deleteCards = document.getElementsByClassName("deleteCard")
-    var deleteCardsArray = Array.from(deleteCards)
-    deleteCardsArray.forEach(dc => {
-        dc.classList.remove("hidden")
-    })
 })
 
 document.getElementById("saveTourButton").addEventListener("click", async event => {
@@ -266,28 +255,30 @@ document.getElementById("saveTourButton").addEventListener("click", async event 
         formData.append('name', tour.name)
         formData.append('userId', document.getElementById("userIdInput").value)
         formData.append('saved', true)
+        formData.append('tourId', parseInt(document.getElementById("tourIdInput").value))
+        await editTour(formData)
 
-        await createTour(formData)
-
-        var stops = stopList.childNodes
+        var stops = stopList.children
         var stopsArray = Array.from(stops)
         stopsArray.forEach(stop => {
             var destination = {
                 name: stop.classList[0],
                 userId: document.getElementById("userIdInput").value,
-                tourId: tour.tourId,
-                city: stop.classList[2],
-                state: stop.classList[3]
+                tourId: parseInt(document.getElementById("tourIdInput").value),
+                city: stop.classList[1],
+                state: stop.classList[2]
             }
             destinations.push(destination)
         })
+
+        await deleteDestination(parseInt(document.getElementById("tourIdInput").value))
 
         var index = 0
         formData = new FormData();
         destinations.forEach(destination => {
             formData.append("[" + index + "].name", destination.name)
             formData.append("[" + index + "].userId", destination.userId)
-            formData.append("[" + index + "].tourId", tour.tourId)
+            formData.append("[" + index + "].tourId", destination.tourId)
             formData.append("[" + index + "].city", destination.city)
             formData.append("[" + index + "].state", destination.state)
 
@@ -302,5 +293,3 @@ document.getElementById("saveTourButton").addEventListener("click", async event 
         alert("You can't save an empty tour. Please add some stops")
     }
 })
-
-$('#mdp-demo').multiDatesPicker();

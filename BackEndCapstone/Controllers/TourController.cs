@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BackEndCapstone.Data;
 using BackEndCapstone.Models;
-using BackEndCapstone.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -131,27 +130,18 @@ namespace BackEndCapstone.Controllers
             return View(viewModel);
         }
 
-        // GET: Tour/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
         // POST: Tour/Delete/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            var foundTour = await _context.Tours
+                .Where(tour => tour.TourId == id)
+                .FirstOrDefaultAsync();
+            
+            _context.Remove(foundTour);
+            await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return Ok(foundTour);
         }
 
         private async Task<ApplicationUser> GetCurrentUserAsync() => await _userManager.GetUserAsync(HttpContext.User);
