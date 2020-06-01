@@ -49,8 +49,20 @@ namespace BackEndCapstone.Controllers
         {
             var users = await _context.ApplicationUsers
                 .Where(user => user.UserType == "venue")
+                .OrderBy(user => user.State)
                 .ToListAsync();
             return Ok(users);
+        }
+
+        public async Task<ActionResult> Venues()
+        {
+            var ViewModel = new VenuesViewModel();
+
+            ViewModel.Venues = await _context.ApplicationUsers
+                .Where(user => user.UserType == "venue")
+                .OrderByDescending(user => user.State)
+                .ToListAsync();
+            return View(ViewModel);
         }
 
         // GET: User/Details/5

@@ -9,6 +9,13 @@ async function createMessage(formData) {
     }).then(res => res.json());
 }
 
+async function markAsRead(id) {
+    await fetch(`/Messages/MarkAsRead?id=${id}`, {
+        method: "Post",
+        body: formData
+    }).then(res => res.json());
+}
+
 document.getElementById("messageReply").addEventListener("click", function (event) {
     event.preventDefault()
     event.target.classList.add("hidden")
@@ -70,7 +77,7 @@ document.querySelector(".sentButton").addEventListener("click", event => {
 })
 
 messages.forEach(message => {
-    message.addEventListener("click", event => {
+    message.addEventListener("click", async event => {
         event.preventDefault()
         if (event.target == message) {
             event.target.classList.add("hidden")
@@ -83,6 +90,8 @@ messages.forEach(message => {
             })
             event.target.previousElementSibling.classList.remove("hidden")
             event.target.previousElementSibling.classList.add("selectedCard")
+            var messageId = parseInt(event.target.id)
+            await markAsRead(messageId)
         }
     })
 })

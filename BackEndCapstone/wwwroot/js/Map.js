@@ -232,6 +232,8 @@ document.getElementById("tourNameButton").addEventListener("click", async event 
         document.getElementById("tourName").classList.remove("hidden")
         document.getElementById("tourNameForm").classList.add("hidden")
         document.getElementById("tourName").innerHTML = document.getElementById("tourNameInput").value
+        document.getElementById("saveTourButton").classList.remove("hidden")
+
 
         var newButton = document.createElement("button")
         newButton.id = "editTourButton"

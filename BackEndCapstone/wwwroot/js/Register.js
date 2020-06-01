@@ -32,3 +32,16 @@ function venueListener() {
 
 bandListener()
 venueListener()
+
+var states = ["Alaska", "Alabama", "Arkansas", "Arizona", "California", "Colorado", "Connecticut", "District of Columbia", "Delaware", "Florida", "Georgia", "Guam", "Hawaii", "Iowa", "Idaho", "Illinois", "Indiana", "Kansas", "Kentucky", "Louisiana", "Massachusetts", "Maryland", "Maine", "Michigan", "Minnesota", "Missouri", "Mississippi", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Puerto Rico", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Virginia", "Vermont", "Washington", "Wisconsin", "West Virginia", "Wyoming"]
+
+var dropdowns = document.querySelectorAll(".statesDropdown");
+
+dropdowns.forEach(dropdown => {
+    for (var i = 0; i < states.length; i++) {
+        var option = document.createElement("option");
+        option.value = states[i];
+        option.text = states[i];
+        dropdown.appendChild(option);
+    }
+})

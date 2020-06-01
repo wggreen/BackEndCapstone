@@ -1,3 +1,35 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
     ViewData["Title"] = "Home Page";
 }
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div class="dashboard">
+
+    </div>
+}
+
+<script>
+
+    async function getUnreadMessages() {
+        var dataObj = await fetch("/Messages/GetUnreadMessages", {
+            method: "Post",
+        }).then(res => res.json());
+
+        return dataObj
+    }
+
+    var messages = getUnreadMessages();
+
+    if (messages.length > 0) {
+        document.querySelector(".dashboard").innerHTML = `You have ${messages.length} unread messages`
+    }
+    else {
+        document.querySelector(".dashboard").innerHTML = `You have no unread messages`
+    }
+
+</script>

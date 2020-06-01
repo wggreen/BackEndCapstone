@@ -91,6 +91,10 @@
         border-radius: .2rem;
         width: 30px;
     }
+
+    .unread {
+        font-weight: bold;
+    }
 </style>
 
 
@@ -118,14 +122,25 @@
                                     <button id="messageReply">Reply</button>
                                 </div>
                             </div>
-                            <span class="individualMessage">
-                                <span id="receivedSender">@item.Sender.Name</span>
-                                <span id="receivedDates">Dates: @item.Dates</span>
-                                <span id="receivedTimestamp">@item.Timestamp</span>
-                            </span>
-                            <input id="senderId" type="hidden" value="@UserManager.GetUserAsync(User).Result.Id"/>
+                            if (item.IsRead == false)
+                            {
+                                <span class="individualMessage unread" id="@item.MessagesId">
+                                    <span id="receivedSender">@item.Sender.Name</span>
+                                    <span id="receivedDates">Dates: @item.Dates</span>
+                                    <span id="receivedTimestamp">@item.Timestamp</span>
+                                </span>
+                            }
+                            if (item.IsRead == true)
+                            {
+                                <span class="individualMessage" id="@item.MessagesId">
+                                    <span id="receivedSender">@item.Sender.Name</span>
+                                    <span id="receivedDates">Dates: @item.Dates</span>
+                                    <span id="receivedTimestamp">@item.Timestamp</span>
+                                </span>
+                            }
+                            <input id="senderId" type="hidden" value="@UserManager.GetUserAsync(User).Result.Id" />
                             <input id="recipientId" type="hidden" value="@item.Sender.Id" />
-                            <input id="messageDates" type="hidden" value=@item.Dates/>
+                            <input id="messageDates" type="hidden" value=@item.Dates />
                         }
                     }
                 </div>
@@ -149,7 +164,7 @@
                                     <p class="card-text">@item.MessageText</p>
                                 </div>
                             </div>
-                            <span class="individualSentMessage">
+                            <span class="individualSentMessage" id="@item.MessagesId">
                                 <span id="sentSender">To: @item.Sender.Name</span>
                                 <span id="sentDates">Dates: @item.Dates</span>
                                 <span id="sentTimestamp">@item.Timestamp</span>

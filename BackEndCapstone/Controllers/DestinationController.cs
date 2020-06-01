@@ -118,6 +118,18 @@ namespace BackEndCapstone.Controllers
                 return Ok(foundDestinations);
         }
 
+        public async Task<ActionResult> DeleteSingle(int id)
+        {
+            var foundDestination = await _context.Destinations
+                .Where(destination => destination.DestinationId == id)
+                .FirstOrDefaultAsync();
+
+            _context.Remove(foundDestination);
+            await _context.SaveChangesAsync();
+
+            return Ok(foundDestination);
+        }
+
         private async Task<ApplicationUser> GetCurrentUserAsync() => await _userManager.GetUserAsync(HttpContext.User);
     }
 }

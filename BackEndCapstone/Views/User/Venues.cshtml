@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Venues";
+}
+
+<h1>Venues</h1>
+
+<style>
+    .statesDropdown {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        max-width: 100px;
+    }
+
+    #filterButton {
+        margin-top: 8px;
+    }
+
+    .card {
+        max-width: 300px;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<div class="statesDropdown">
+    <button id="filterButton" type="button" class="btn btn-primary">Filter</button>
+</div>
+
+<ul class="statesList"></ul>
+
+<script src="~/js/Venues.js"></script>

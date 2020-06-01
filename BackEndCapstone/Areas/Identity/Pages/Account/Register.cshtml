@@ -4,6 +4,13 @@
     ViewData["Title"] = "Register";
 }
 
+<style>
+    .statesDropdown {
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+
 <h1>@ViewData["Title"]</h1>
 
 <p>Are you a band or venue?</p>
@@ -14,7 +21,7 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form class="hidden" id="bandForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" >
+        <form class="hidden" id="bandForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h4>Create a new account.</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
@@ -46,9 +53,10 @@
             </div>
             <div class="form-group">
                 <label class="required" asp-for="Input.State"></label>
-                <input asp-for="Input.State" class="form-control" />
                 <span asp-validation-for="Input.State" class="text-danger"></span>
+                <select class="form-control statesDropdown" asp-for="Input.State"></select>
             </div>
+            <div class="form-group statesDropdown"></div>
             <div class="form-group">
                 <label asp-for="Input.Blurb"></label>
                 <textarea asp-for="Input.Blurb" class="form-control"></textarea>
@@ -89,7 +97,7 @@
                 <input asp-for="Input.Youtube" class="form-control" />
                 <span asp-validation-for="Input.Youtube" class="text-danger"></span>
             </div>
-            <input asp-for="Input.UserType" class="hidden" value="band"/>
+            <input asp-for="Input.UserType" class="hidden" value="band" />
             <button type="submit" class="btn btn-primary">Register</button>
         </form>
         <form class="hidden" id="venueForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
@@ -129,8 +137,8 @@
             </div>
             <div class="form-group">
                 <label class="required" asp-for="Input.State"></label>
-                <input asp-for="Input.State" class="form-control" />
                 <span asp-validation-for="Input.State" class="text-danger"></span>
+                <select class="form-control statesDropdown" asp-for="Input.State"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Input.Zip"></label>
@@ -178,7 +186,7 @@
     </div>
 </div>
 
-<script src="~/js/register.js"></script>
+<script src="~/js/Register.js"></script>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

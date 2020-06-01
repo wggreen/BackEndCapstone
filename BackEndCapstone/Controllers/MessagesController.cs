@@ -24,6 +24,18 @@ namespace BackEndCapstone.Controllers
             _userManager = userManager;
         }
 
+        public async Task<ActionResult> GetUnreadMessages()
+        {
+            var user = await GetCurrentUserAsync();
+
+            var messages = await _context.Messages
+                .Where(message => message.RecipientId == user.Id)
+                .Where(message => message.IsRead == false)
+                .ToListAsync();
+
+            return Ok(messages);
+        }
+
         public async Task<ActionResult> Index()
         {
             var user = await GetCurrentUserAsync();
@@ -70,27 +82,20 @@ namespace BackEndCapstone.Controllers
             }
         }
 
-        // GET: Messages/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
         // POST: Messages/Edit/5
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> MarkAsRead(int id)
         {
-            try
-            {
-                // TODO: Add update logic here
+            var foundMessage = await _context.Messages
+                .Where(message => message.MessagesId == id)
+                .FirstOrDefaultAsync();
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            foundMessage.IsRead = true;
+
+            _context.Messages.Update(foundMessage);
+            await _context.SaveChangesAsync();
+
+            return Ok(foundMessage);
         }
 
         // GET: Messages/Delete/5

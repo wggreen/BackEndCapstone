@@ -439,10 +439,13 @@ C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Areas\Identity\Pages\_ViewStart.cshtml.g.cs
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Home\Privacy.cshtml.g.cs
+C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Messages\Index.cshtml.g.cs
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_LoginPartial.cshtml.g.cs
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
+C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Tour\EditMap.cshtml.g.cs
+C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Tour\Index.cshtml.g.cs
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\User\Index.cshtml.g.cs
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\_ViewImports.cshtml.g.cs
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\_ViewStart.cshtml.g.cs
@@ -455,7 +458,5 @@ C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\BackEndCapstone.dll
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\BackEndCapstone.pdb
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\BackEndCapstone.genruntimeconfig.cache
-C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Tour\Index.cshtml.g.cs
-C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Tour\EditMap.cshtml.g.cs
-C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Messages\Index.cshtml.g.cs
+C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\Razor\Views\User\Venues.cshtml.g.cs
 C:\Users\William\workspace\BackEndCapstone\BackEndCapstone\obj\Debug\netcoreapp3.1\BackEndCapstone.csprojAssemblyReference.cache
