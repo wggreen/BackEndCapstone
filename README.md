@@ -24,3 +24,16 @@ My friends who run music venues also said the booking inquiry process could desp
 * Unread message notification
 * Messaging
 
+## Usage
+
+1. Launch Visual Studio
+2. Start the project from the 'BackEndCapstone.sln' file
+3. Register a band user
+4. Logout and register at least 2 venue users
+5. Login as the band, and plan a tour
+6. Message one of the venues in your tour
+7. Save your tour
+8. Navigate to your list of saved tours, and edit or delete it
+9. Navigate to the list of all venues and filter by state
+10. Logout and log back in as the venue you messaged
+11. Respond to the unread message from the band
