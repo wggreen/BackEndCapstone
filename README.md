@@ -13,9 +13,14 @@ My friends who run music venues also said the booking inquiry process could desp
 
 #### Band
 
-When a band logs in, they will be shown a dashboard that tells them if they have any unread messages, and lets them navigate to the tour-planning map page, the list of their saved tours, the message center, and the text list of all registered venues.
+* Unread message notification
+* Tour planning with Google Maps API
+* Messaging
+* Manage saved tours
+* Navigate and filter master list of tours
 
 #### Venue
 
-When a venue logs in, they will be shown a dashboard that tells them if they have any unread messages, and lets them navigate to message center.
+* Unread message notification
+* Messaging
 
